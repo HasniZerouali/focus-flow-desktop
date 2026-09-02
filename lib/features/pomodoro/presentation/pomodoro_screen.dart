@@ -87,6 +87,10 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     final timerService = ref.watch(timerServiceProvider);
 
     final isPomodoroActive = snapshot.isActive && snapshot.mode == TimerMode.pomodoro;
+    if (isPomodoroActive) {
+      _currentPhase = snapshot.pomodoroPhase;
+      _currentCycle = snapshot.pomodoroCycle;
+    }
     final totalCycles = settings.pomodoroCycles;
     final phaseColor = _currentPhase.color;
 

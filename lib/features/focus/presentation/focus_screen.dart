@@ -54,7 +54,7 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
 
     final tasks = ref.read(tasksProvider).valueOrNull ?? [];
     final selectedTask = _selectedTaskId != null
-        ? tasks.firstWhere((t) => t.id == _selectedTaskId, orElse: () => throw Exception('Task not found'))
+        ? tasks.where((t) => t.id == _selectedTaskId).firstOrNull
         : null;
 
     ref.read(timerServiceProvider).startSession(

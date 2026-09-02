@@ -31,7 +31,8 @@ class TasksNotifier extends StateNotifier<AsyncValue<List<TaskModel>>> {
 
   Future<void> toggleTaskCompleted(String id) async {
     final currentTasks = state.valueOrNull ?? [];
-    final task = currentTasks.firstWhere((t) => t.id == id, orElse: () => throw Exception('Task not found'));
+    final task = currentTasks.where((t) => t.id == id).firstOrNull;
+    if (task == null) return;
     final isNowCompleted = !task.completed;
     final updated = task.copyWith(
       completed: isNowCompleted,
