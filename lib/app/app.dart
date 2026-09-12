@@ -79,14 +79,19 @@ class _FocusFlowAppState extends ConsumerState<FocusFlowApp> {
 
   @override
   Widget build(BuildContext context) {
-    final settingsNotifier = ref.watch(settingsProvider.notifier);
+    final settings = ref.watch(settingsProvider);
+    final themeMode = switch (settings.themeMode) {
+      'light' => ThemeMode.light,
+      'dark' => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
 
     return MaterialApp.router(
       title: 'Focus Flow',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: settingsNotifier.flutterThemeMode,
+      themeMode: themeMode,
       routerConfig: appRouter,
     );
   }

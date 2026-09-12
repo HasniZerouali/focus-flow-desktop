@@ -197,7 +197,7 @@ class _SessionDetailDialogState extends ConsumerState<SessionDetailDialog> {
                               icon: Icon(
                                 filled ? PhosphorIconsFill.star : PhosphorIconsRegular.star,
                                 size: 20,
-                                color: filled ? AppColors.warning : AppColors.darkTextMuted,
+                                color: filled ? AppColors.warning : (isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted),
                               ),
                               onPressed: () => setState(() => _rating = star),
                             );
@@ -276,11 +276,12 @@ class _SessionDetailDialogState extends ConsumerState<SessionDetailDialog> {
   }
 
   Widget _buildMiniStat(String label, String value) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [
         Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, fontFamily: 'monospace')),
         const SizedBox(height: 2),
-        Text(label, style: const TextStyle(fontSize: 11, color: AppColors.darkTextMuted)),
+        Text(label, style: TextStyle(fontSize: 11, color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted)),
       ],
     );
   }

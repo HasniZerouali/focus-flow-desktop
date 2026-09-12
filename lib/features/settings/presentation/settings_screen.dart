@@ -75,6 +75,7 @@ class SettingsScreen extends ConsumerWidget {
                               value: 'dark',
                               currentValue: settings.themeMode,
                               icon: PhosphorIconsRegular.moon,
+                              isDark: isDark,
                               onTap: () => settingsNotifier.setThemeMode('dark'),
                             ),
                             const SizedBox(width: 14),
@@ -83,6 +84,7 @@ class SettingsScreen extends ConsumerWidget {
                               value: 'light',
                               currentValue: settings.themeMode,
                               icon: PhosphorIconsRegular.sun,
+                              isDark: isDark,
                               onTap: () => settingsNotifier.setThemeMode('light'),
                             ),
                             const SizedBox(width: 14),
@@ -91,6 +93,7 @@ class SettingsScreen extends ConsumerWidget {
                               value: 'system',
                               currentValue: settings.themeMode,
                               icon: PhosphorIconsRegular.laptop,
+                              isDark: isDark,
                               onTap: () => settingsNotifier.setThemeMode('system'),
                             ),
                           ],
@@ -291,9 +294,15 @@ class SettingsScreen extends ConsumerWidget {
     required String value,
     required String currentValue,
     required IconData icon,
+    required bool isDark,
     required VoidCallback onTap,
   }) {
     final isSelected = value == currentValue;
+    final unselectedColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final borderColor = isSelected
+        ? AppColors.primary
+        : (isDark ? AppColors.darkBorderSubtle : AppColors.lightBorder);
+
     return Expanded(
       child: InkWell(
         borderRadius: AppSpacing.roundedMd,
@@ -301,23 +310,25 @@ class SettingsScreen extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withValues(alpha: 0.15) : Colors.transparent,
+            color: isSelected
+                ? AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.08)
+                : (isDark ? Colors.transparent : AppColors.lightSurfaceCard),
             borderRadius: AppSpacing.roundedMd,
             border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.darkBorderSubtle,
+              color: borderColor,
               width: isSelected ? 1.5 : 1,
             ),
           ),
           child: Column(
             children: [
-              Icon(icon, size: 22, color: isSelected ? AppColors.primary : AppColors.darkTextSecondary),
+              Icon(icon, size: 22, color: isSelected ? AppColors.primary : unselectedColor),
               const SizedBox(height: 8),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                  color: isSelected ? AppColors.primary : AppColors.darkTextSecondary,
+                  color: isSelected ? AppColors.primary : unselectedColor,
                 ),
               ),
             ],
@@ -374,13 +385,20 @@ class SettingsScreen extends ConsumerWidget {
               constraints: const BoxConstraints(maxHeight: 180),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.darkSurface,
+                color: Theme.of(ctx).brightness == Brightness.dark ? AppColors.darkSurface : AppColors.lightSurfaceElevated,
                 borderRadius: AppSpacing.roundedSm,
+                border: Border.all(
+                  color: Theme.of(ctx).brightness == Brightness.dark ? AppColors.darkBorderSubtle : AppColors.lightBorder,
+                ),
               ),
               child: SingleChildScrollView(
                 child: Text(
                   jsonStr,
-                  style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: AppColors.darkTextSecondary),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontFamily: 'monospace',
+                    color: Theme.of(ctx).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  ),
                 ),
               ),
             ),
@@ -477,9 +495,22 @@ class SettingsScreen extends ConsumerWidget {
             Container(
               constraints: const BoxConstraints(maxHeight: 180),
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: AppColors.darkSurface, borderRadius: AppSpacing.roundedSm),
+              decoration: BoxDecoration(
+                color: Theme.of(ctx).brightness == Brightness.dark ? AppColors.darkSurface : AppColors.lightSurfaceElevated,
+                borderRadius: AppSpacing.roundedSm,
+                border: Border.all(
+                  color: Theme.of(ctx).brightness == Brightness.dark ? AppColors.darkBorderSubtle : AppColors.lightBorder,
+                ),
+              ),
               child: SingleChildScrollView(
-                child: Text(csvStr, style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: AppColors.darkTextSecondary)),
+                child: Text(
+                  csvStr,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontFamily: 'monospace',
+                    color: Theme.of(ctx).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  ),
+                ),
               ),
             ),
           ],
