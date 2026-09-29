@@ -53,4 +53,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/
+    - assets/icons/tray_icon.png
+    - assets/icons/tray_icon_macos.png
+    - assets/logo/
 

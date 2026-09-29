@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,7 @@ class SettingsScreen extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final settingsNotifier = ref.watch(settingsProvider.notifier);
     final db = ref.watch(appDatabaseProvider);
+    final isMac = Platform.isMacOS;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -105,8 +107,11 @@ class SettingsScreen extends ConsumerWidget {
 
                 const SizedBox(height: 28),
 
-                // 2. WINDOWS INTEGRATION & BEHAVIOR
-                _buildSectionHeader('Windows Desktop Integration', PhosphorIconsRegular.windowsLogo),
+                // 2. SYSTEM INTEGRATION & BEHAVIOR
+                _buildSectionHeader(
+                  isMac ? 'macOS System Integration' : 'Windows Desktop Integration',
+                  isMac ? PhosphorIconsRegular.appleLogo : PhosphorIconsRegular.windowsLogo,
+                ),
                 const SizedBox(height: 12),
                 Card(
                   child: Padding(
@@ -115,8 +120,16 @@ class SettingsScreen extends ConsumerWidget {
                       children: [
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Minimize to System Tray', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                          subtitle: const Text('Closing the window hides it to the Windows notification tray rather than terminating it.', style: TextStyle(fontSize: 12)),
+                          title: Text(
+                            isMac ? 'Minimize to Menu Bar' : 'Minimize to System Tray',
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                          ),
+                          subtitle: Text(
+                            isMac
+                                ? 'Closing the window hides it to the macOS menu bar rather than terminating it.'
+                                : 'Closing the window hides it to the Windows notification tray rather than terminating it.',
+                            style: const TextStyle(fontSize: 12),
+                          ),
                           value: settings.minimizeToTray,
                           activeThumbColor: AppColors.primary,
                           onChanged: (val) {
@@ -126,8 +139,16 @@ class SettingsScreen extends ConsumerWidget {
                         const Divider(),
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Launch at Windows Startup', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                          subtitle: const Text('Automatically launch Focus Flow in the background on Windows user login.', style: TextStyle(fontSize: 12)),
+                          title: Text(
+                            isMac ? 'Launch at Mac Startup' : 'Launch at Windows Startup',
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                          ),
+                          subtitle: Text(
+                            isMac
+                                ? 'Automatically launch Focus Flow in the background on macOS user login.'
+                                : 'Automatically launch Focus Flow in the background on Windows user login.',
+                            style: const TextStyle(fontSize: 12),
+                          ),
                           value: settings.startWithWindows,
                           activeThumbColor: AppColors.primary,
                           onChanged: (val) {
@@ -138,7 +159,12 @@ class SettingsScreen extends ConsumerWidget {
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
                           title: const Text('Native Notifications', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                          subtitle: const Text('Show native Windows toast notifications when sessions or Pomodoro breaks finish.', style: TextStyle(fontSize: 12)),
+                          subtitle: Text(
+                            isMac
+                                ? 'Show native macOS notifications when sessions or Pomodoro breaks finish.'
+                                : 'Show native Windows toast notifications when sessions or Pomodoro breaks finish.',
+                            style: const TextStyle(fontSize: 12),
+                          ),
                           value: settings.notificationsEnabled,
                           activeThumbColor: AppColors.primary,
                           onChanged: (val) {
@@ -258,7 +284,9 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Focus Flow has no account creation, no analytics, and makes zero network requests. All your session history, tasks, categories, and metrics are stored strictly on this Windows machine in a native SQLite database.',
+                              isMac
+                                  ? 'Focus Flow has no account creation, no analytics, and makes zero network requests. All your session history, tasks, categories, and metrics are stored strictly on this Mac in a native SQLite database.'
+                                  : 'Focus Flow has no account creation, no analytics, and makes zero network requests. All your session history, tasks, categories, and metrics are stored strictly on this device in a native SQLite database.',
                               style: TextStyle(
                                 fontSize: 12,
                                 height: 1.4,

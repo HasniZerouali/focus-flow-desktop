@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:drift/drift.dart' hide Column;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -103,9 +104,11 @@ void main() {
     );
 
     expect(find.text('Focus Flow'), findsOneWidget);
-    expect(find.byTooltip('Minimize'), findsOneWidget);
-    expect(find.byTooltip('Maximize'), findsOneWidget);
-    expect(find.byTooltip('Close'), findsOneWidget);
+    if (!Platform.isMacOS) {
+      expect(find.byTooltip('Minimize'), findsOneWidget);
+      expect(find.byTooltip('Maximize'), findsOneWidget);
+      expect(find.byTooltip('Close'), findsOneWidget);
+    }
 
     await tester.pumpWidget(const SizedBox());
     await db.close();

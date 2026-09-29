@@ -180,27 +180,34 @@ class _SidebarNavigationState extends ConsumerState<SidebarNavigation> {
               onTap: widget.onToggleCollapse,
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: widget.isCollapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      widget.isCollapsed
-                          ? PhosphorIconsRegular.caretDoubleRight
-                          : PhosphorIconsRegular.caretDoubleLeft,
-                      size: 16,
-                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
-                    ),
-                    if (!widget.isCollapsed) ...[
-                      const SizedBox(width: 8),
-                      Text(
-                        'Collapse sidebar',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
-                        ),
+                child: ClipRect(
+                  child: Row(
+                    mainAxisAlignment: widget.isCollapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        widget.isCollapsed
+                            ? PhosphorIconsRegular.caretDoubleRight
+                            : PhosphorIconsRegular.caretDoubleLeft,
+                        size: 16,
+                        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
                       ),
+                      if (!widget.isCollapsed) ...[
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Collapse sidebar',
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -252,38 +259,48 @@ class _NavItemTileState extends State<_NavItemTile> {
     final content = AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       padding: EdgeInsets.symmetric(
-        horizontal: widget.isCollapsed ? 12 : 14,
+        horizontal: widget.isCollapsed ? 10 : 14,
         vertical: 10,
       ),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: AppSpacing.roundedMd,
       ),
-      child: Row(
-        mainAxisAlignment: widget.isCollapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
-        children: [
-          Icon(
-            widget.isActive ? widget.item.activeIcon : widget.item.icon,
-            size: 20,
-            color: itemColor,
-          ),
-          if (!widget.isCollapsed) ...[
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                widget.item.label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w500,
-                  color: widget.isActive
-                      ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
-                      : itemColor,
+      child: ClipRect(
+        child: widget.isCollapsed
+            ? Center(
+                child: Icon(
+                  widget.isActive ? widget.item.activeIcon : widget.item.icon,
+                  size: 20,
+                  color: itemColor,
                 ),
+              )
+            : Row(
+                children: [
+                  Icon(
+                    widget.isActive ? widget.item.activeIcon : widget.item.icon,
+                    size: 20,
+                    color: itemColor,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      widget.item.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w500,
+                        color: widget.isActive
+                            ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                            : itemColor,
+                      ),
+                    ),
+                  ),
+                  if (widget.badge != null) widget.badge!,
+                ],
               ),
-            ),
-            if (widget.badge != null) widget.badge!,
-          ],
-        ],
       ),
     );
 

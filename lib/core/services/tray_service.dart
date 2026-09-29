@@ -28,8 +28,14 @@ class TrayService with TrayListener {
     if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       try {
         trayManager.addListener(this);
-        // Using tray_icon.png from assets
-        await trayManager.setIcon('assets/icons/tray_icon.png');
+        if (Platform.isMacOS) {
+          await trayManager.setIcon(
+            'assets/icons/tray_icon_macos.png',
+            isTemplate: true,
+          );
+        } else {
+          await trayManager.setIcon('assets/icons/tray_icon.png');
+        }
         await updateTrayMenu();
         _initialized = true;
       } catch (e) {
@@ -64,7 +70,7 @@ class TrayService with TrayListener {
             MenuItem.separator(),
             MenuItem(
               key: 'quit_app',
-              label: 'Exit Focus Flow',
+              label: Platform.isMacOS ? 'Quit Focus Flow' : 'Exit Focus Flow',
             ),
           ],
         );

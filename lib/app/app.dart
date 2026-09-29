@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,10 +31,12 @@ class _FocusFlowAppState extends ConsumerState<FocusFlowApp> {
   bool _handleGlobalKeyboard(KeyEvent event) {
     if (event is! KeyDownEvent) return false;
 
-    final isCtrl = HardwareKeyboard.instance.isControlPressed;
+    final isModifier = Platform.isMacOS
+        ? HardwareKeyboard.instance.isMetaPressed
+        : HardwareKeyboard.instance.isControlPressed;
     final isShift = HardwareKeyboard.instance.isShiftPressed;
 
-    if (!isCtrl || !isShift) return false;
+    if (!isModifier || !isShift) return false;
 
     final key = event.logicalKey;
     final timerService = ref.read(timerServiceProvider);

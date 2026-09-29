@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+
 class AppConstants {
   AppConstants._();
 
@@ -49,8 +52,9 @@ class AppConstants {
   static const double defaultWindowHeight = 820.0;
 
   // Keyboard Shortcuts
-  static const String shortcutStartPause = 'Ctrl + Shift + S';
-  static const String shortcutFinish = 'Ctrl + Shift + F';
-  static const String shortcutPomodoro = 'Ctrl + Shift + P';
-  static const String shortcutTasks = 'Ctrl + Shift + T';
+  static String get shortcutModifier => !kIsWeb && Platform.isMacOS ? '⌘' : 'Ctrl';
+  static String get shortcutStartPause => '$shortcutModifier + Shift + S';
+  static String get shortcutFinish => '$shortcutModifier + Shift + F';
+  static String get shortcutPomodoro => '$shortcutModifier + Shift + P';
+  static String get shortcutTasks => '$shortcutModifier + Shift + T';
 }

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -36,19 +37,19 @@ class CustomTitleBar extends ConsumerWidget {
             child: DragToMoveArea(
               child: Container(
                 color: Colors.transparent,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.only(
+                  left: Platform.isMacOS ? 80 : 16,
+                  right: 16,
+                ),
                 child: Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.15),
-                        borderRadius: AppSpacing.roundedSm,
-                      ),
-                      child: const Icon(
-                        PhosphorIconsRegular.timer,
-                        size: 16,
-                        color: AppColors.primary,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.asset(
+                        'assets/logo/focus-flow-logo.png',
+                        width: 22,
+                        height: 22,
+                        fit: BoxFit.cover,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -122,28 +123,29 @@ class CustomTitleBar extends ConsumerWidget {
             ),
           ),
 
-          // Window Controls (Minimize, Maximize, Close)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _WindowButton(
-                icon: PhosphorIconsRegular.minus,
-                tooltip: 'Minimize',
-                onPressed: () => WindowService.instance.minimize(),
-              ),
-              _WindowButton(
-                icon: PhosphorIconsRegular.cornersOut,
-                tooltip: 'Maximize',
-                onPressed: () => WindowService.instance.maximize(),
-              ),
-              _WindowButton(
-                icon: PhosphorIconsRegular.x,
-                tooltip: 'Close',
-                isClose: true,
-                onPressed: () => WindowService.instance.close(),
-              ),
-            ],
-          ),
+          // Window Controls (Minimize, Maximize, Close) - Non-macOS only
+          if (!Platform.isMacOS)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _WindowButton(
+                  icon: PhosphorIconsRegular.minus,
+                  tooltip: 'Minimize',
+                  onPressed: () => WindowService.instance.minimize(),
+                ),
+                _WindowButton(
+                  icon: PhosphorIconsRegular.cornersOut,
+                  tooltip: 'Maximize',
+                  onPressed: () => WindowService.instance.maximize(),
+                ),
+                _WindowButton(
+                  icon: PhosphorIconsRegular.x,
+                  tooltip: 'Close',
+                  isClose: true,
+                  onPressed: () => WindowService.instance.close(),
+                ),
+              ],
+            ),
         ],
       ),
     );
